@@ -1,0 +1,225 @@
+# Required means required when the named workflow or phase applies.
+# A reviewed revision records source inspection. Runtime test results are separate.
+sources:
+  matt-pocock:
+    repository: https://github.com/mattpocock/skills
+    reviewed_revision: v1.3.2
+    verification: Installed plugin files and upstream release inspected.
+    maintenance: Review plugin release changes to tracker, domain, and companion contracts.
+  vercel:
+    repository: https://github.com/vercel-labs/agent-skills
+    reviewed_revision: 5a37a6329fbad3666c3207392a6a7c0110e92efb
+    verification: Skill instructions inspected at an upstream discovery release.
+    maintenance: Upstream publishes immutable releases. Review individual skill changes and assets.
+  supabase:
+    repository: https://github.com/supabase/agent-skills
+    verification: The PostgreSQL skill inspected on main declares version 1.1.1.
+    maintenance: Upstream ships per-skill releases. Verify the release contents before adopting it.
+  impeccable:
+    repository: https://github.com/pbakaus/impeccable
+    verification: Skill instructions and selected prose references inspected on main.
+    maintenance: Upstream releases the skill and native engine separately. Review them independently.
+  jakub-krehel:
+    repository: https://github.com/jakubkrehel/make-interfaces-feel-better
+    reviewed_revision: 35545ea1512ad59fa463e6b1f95ca9c052981fe6
+    verification: Skill instructions inspected at this commit.
+    maintenance: Upstream uses commit history. Review changes to the skill and its sibling guides.
+  cursor:
+    repository: https://github.com/cursor/plugins
+    verification: Thermos code-quality skill instructions inspected on main.
+    maintenance: Track the standalone rubric in Thermos. Recheck its instructions independently of the plugin.
+
+skills:
+  setup-matt-pocock-skills:
+    source: matt-pocock
+    path: skills/engineering/setup-matt-pocock-skills/SKILL.md
+    responsibility: Establish the framework's project configuration.
+    applies_when: Required framework configuration is missing.
+    phases: [bootstrap]
+    required: true
+    dependencies: [bundled tracker and domain templates, configured tracker access if needed]
+    contract: Existing repo and user choices → Agent skills pointers and tracker/domain configuration, plus triage mapping when applicable.
+    compatibility: Use upstream setup explicitly. Approve repo edits, tracker changes and label creation in scope before writes.
+  triage:
+    source: matt-pocock
+    path: skills/engineering/triage/SKILL.md
+    responsibility: Classify incoming issues in the configured tracker.
+    applies_when: The project uses the upstream triage workflow.
+    phases: [triage]
+    required: false
+    dependencies: [configured tracker, triage label mapping]
+    contract: Existing issue or configured request surface → triage findings and configured tracker updates.
+    compatibility: Consult only for triage. Obtain tracker write authorization before applying changes.
+  to-spec:
+    source: matt-pocock
+    path: skills/engineering/to-spec/SKILL.md
+    responsibility: Synthesize agreed requirements into the upstream spec format.
+    applies_when: The project needs a new specification.
+    phases: [planning]
+    required: true
+    dependencies: [configured tracker, configured triage vocabulary where applicable]
+    contract: Agreed conversation and test seams → tracker spec for active work.
+    compatibility: Preview the spec and get publication approval before the tracker write. Preserve the original format.
+  to-tickets:
+    source: matt-pocock
+    path: skills/engineering/to-tickets/SKILL.md
+    responsibility: Slice work into reviewable tickets with blocking edges.
+    applies_when: A plan, specification, or conversation needs ticket breakdown.
+    phases: [planning]
+    required: true
+    dependencies: [configured tracker, configured triage vocabulary where applicable]
+    contract: Agreed plan or specification → individual tickets in the configured tracker.
+    compatibility: Use the existing approval checkpoint before publication. Preserve native parent and blocker relationships where available.
+  codebase-design:
+    source: matt-pocock
+    path: skills/engineering/codebase-design/SKILL.md
+    responsibility: Design module interfaces and test seams.
+    applies_when: A boundary, interface, or structural refactor needs design judgment.
+    phases: [design, implementation, review]
+    required: false
+    dependencies: [DEEPENING.md for restructuring, DESIGN-IT-TWICE.md for alternative interfaces]
+    contract: Codebase and design question → vocabulary, interface options, and trade-offs.
+    compatibility: Reference by default. Alternative-design delegation stays within the approved scope.
+  prototype:
+    source: matt-pocock
+    path: skills/engineering/prototype/SKILL.md
+    responsibility: Resolve a specific logic or UI design question through a disposable experiment.
+    applies_when: A concrete unknown merits a prototype.
+    phases: [design]
+    required: false
+    dependencies: [LOGIC.md or UI.md]
+    contract: Design question → runnable prototype and findings. Upstream proposes a throwaway branch with a ticket pointer.
+    compatibility: Agree on the experiment scope. Commits, tracker pointers, and promotion to production require their applicable approvals.
+  tdd:
+    source: matt-pocock
+    path: skills/engineering/tdd/SKILL.md
+    responsibility: Implement one observable behaviour at a time through an agreed seam.
+    applies_when: Pair implementation changes observable behaviour.
+    phases: [implementation]
+    required: true
+    dependencies: [tests.md, mocking.md, codebase-design when a seam needs design]
+    contract: Agreed seam and desired behaviour → failing test, minimal implementation, and passing evidence.
+    compatibility: The approved pairing increment supplies the seam and bounds the red–green cycle.
+  code-review:
+    source: matt-pocock
+    path: skills/engineering/code-review/SKILL.md
+    responsibility: Independently assess standards compliance and specification fidelity.
+    applies_when: A completed pairing ticket reaches final review.
+    phases: [review]
+    required: true
+    dependencies: [fixed Git comparison, configured tracker, project standards, parallel read-only reviewers]
+    contract: Fixed comparison and originating requirements → distinct Standards and Spec reports.
+    compatibility: Keep both review axes and report missing evidence. Findings are input to approved follow-up work.
+  domain-modeling:
+    source: matt-pocock
+    path: skills/engineering/domain-modeling/SKILL.md
+    responsibility: Maintain domain vocabulary and durable architecture decisions.
+    applies_when: Work resolves a domain term or qualifies for an ADR.
+    phases: [design, implementation, documentation]
+    required: true
+    dependencies: [GLOSSARY-FORMAT.md, ADR-FORMAT.md, project domain layout]
+    contract: Resolved terms and decisions → glossary or ADR in the project's existing locations.
+    compatibility: Create artifacts as needed, within the approved documentation scope.
+  pr:
+    source: matt-pocock
+    path: skills/engineering/pr/SKILL.md
+    responsibility: Draft a focused PR description from implementation evidence.
+    applies_when: Pairing delivery uses a pull request.
+    phases: [delivery]
+    required: true
+    dependencies: [review evidence, project PR template if present]
+    contract: Reviewed changes and evidence → Summary, Evidence, and Merge Danger.
+    compatibility: Drafting supplies the publication checkpoint. Attribution in CREDITS.md adds no skill dependency.
+  teach:
+    source: matt-pocock
+    path: skills/productivity/teach/SKILL.md
+    responsibility: Teach a specific concept through a guided session.
+    applies_when: The developer requests dedicated teaching.
+    phases: [learning]
+    required: false
+    dependencies: [MISSION-FORMAT.md, RESOURCES-FORMAT.md, LEARNING-RECORD-FORMAT.md, GLOSSARY-FORMAT.md, dedicated teaching directory]
+    contract: Learning goal → teaching materials and learning records in the teaching workspace.
+    compatibility: Invoke separately from pairing and keep teaching artifacts in that workspace.
+  writing-for-agents:
+    source: matt-pocock
+    path: skills/productivity/writing-for-agents/SKILL.md
+    responsibility: Make agent-facing instructions concise and discoverable.
+    applies_when: Authoring instructions, skills, or documents reached by their pointers.
+    phases: [documentation]
+    required: false
+    dependencies: [SKILL-MECHANICS.md when editing skills]
+    contract: Agent-facing document → clearer triggers, steps, and completion criteria.
+    compatibility: Use within the approved documentation scope.
+
+  vercel-react-best-practices:
+    source: vercel
+    path: skills/react-best-practices/SKILL.md
+    responsibility: React and Next.js implementation and performance guidance.
+    applies_when: Changing or reviewing React rendering, data fetching, or bundle performance.
+    phases: [implementation, review]
+    required: false
+    dependencies: [bundled rules, installed React or Next.js version]
+    contract: Relevant code and performance question → recommendations and measurements where available.
+    compatibility: Advisory. Check rule APIs and router assumptions against the project. Suggested libraries do not grant dependency approval.
+  vercel-composition-patterns:
+    source: vercel
+    path: skills/composition-patterns/SKILL.md
+    responsibility: Design reusable React component APIs.
+    applies_when: Designing or simplifying a reusable React component or library.
+    phases: [design, implementation, review]
+    required: false
+    dependencies: [bundled rules, installed React version]
+    contract: Component API and usage → composition options or review findings.
+    compatibility: Advisory. The React 19 guidance requires React 19 or later. Keep interface changes within approved scope.
+  web-design-guidelines:
+    source: vercel
+    path: skills/web-design-guidelines/SKILL.md
+    responsibility: Review web UI source against Vercel's interface guidelines.
+    applies_when: A web UI change benefits from an additional source review.
+    phases: [review]
+    required: false
+    dependencies: [bundled references/command.md snapshot]
+    contract: File or pattern → file-and-line findings.
+    compatibility: Use the bundled snapshot. Findings supplement rendered verification and accessibility evaluation.
+
+  supabase-postgres-best-practices:
+    source: supabase
+    path: skills/supabase-postgres-best-practices/SKILL.md
+    responsibility: PostgreSQL schema, SQL, performance, and operational guidance.
+    applies_when: The project uses PostgreSQL and the change affects relevant database behaviour.
+    phases: [design, implementation, review]
+    required: false
+    dependencies: [bundled references, deployed PostgreSQL and extension versions]
+    contract: SQL, schema, or observed database behaviour → design or review recommendations.
+    compatibility: Advisory. Confirm engine applicability and use platform-specific rules only when relevant. Database access, migrations, and writes require existing project authorization.
+
+  impeccable:
+    source: impeccable
+    path: .agent/skills/impeccable/SKILL.md
+    responsibility: Shape visual direction and critique generic UI patterns.
+    applies_when: Designing or redesigning a UI, or reviewing an existing surface for visual direction.
+    phases: [design, review]
+    required: false
+    dependencies: [reference/new-work.md for visual direction, reference/critique-rubric.md for critique, project brief and design system, rendered examples when available]
+    contract: Brief and visual evidence → design options or critique in the existing ticket or conversation.
+    compatibility: Prose references only. Full invocation can download an engine, run hooks, and create PRODUCT.md, DESIGN.md, or surface briefs. The scoped reference use keeps design decisions in the project's existing artifacts.
+  make-interfaces-feel-better:
+    source: jakub-krehel
+    path: skills/make-interfaces-feel-better/SKILL.md
+    responsibility: Polish typography, surfaces, icons, motion, and related interaction details.
+    applies_when: Refining or reviewing a UI with an established design direction.
+    phases: [implementation, review]
+    required: false
+    dependencies: [typography.md, surfaces.md, animations.md, icons.md, performance.md]
+    contract: Targeted UI code or rendered surface → scoped polish findings or approved edits.
+    compatibility: Use the project's current styling system and interaction constraints. Browser verification stays with the project.
+  thermo-nuclear-code-quality-review:
+    source: cursor
+    path: thermos/skills/thermo-nuclear-code-quality-review/SKILL.md
+    responsibility: Review structural complexity, abstraction quality, and maintainability.
+    applies_when: A complex diff warrants an explicitly requested deeper structural review.
+    phases: [review]
+    required: false
+    dependencies: [scoped diff, relevant source, project standards]
+    contract: Scoped diff → prioritized structural findings and proposed simplifications.
+    compatibility: Standalone rubric only, as a read-only input to the Standards axis. Apply repository standards first. The Thermos orchestrator and suggested edits are outside this review scope.
