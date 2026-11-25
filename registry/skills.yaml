@@ -38,6 +38,7 @@ skills:
     phases: [bootstrap]
     required: true
     dependencies: [bundled tracker and domain templates, configured tracker access if needed]
+    companion_files: [issue-tracker-github.md, issue-tracker-gitlab.md, issue-tracker-local.md, domain.md, triage-labels.md]
     contract: Existing repo and user choices → Agent skills pointers and tracker/domain configuration, plus triage mapping when applicable.
     compatibility: Use upstream setup explicitly. Approve repo edits, tracker changes and label creation in scope before writes.
   triage:
@@ -98,6 +99,7 @@ skills:
     phases: [implementation]
     required: true
     dependencies: [tests.md, mocking.md, codebase-design when a seam needs design]
+    companion_files: [tests.md, mocking.md]
     contract: Agreed seam and desired behaviour → failing test, minimal implementation, and passing evidence.
     compatibility: The approved pairing increment supplies the seam and bounds the red–green cycle.
   code-review:
@@ -118,6 +120,7 @@ skills:
     phases: [design, implementation, documentation]
     required: true
     dependencies: [GLOSSARY-FORMAT.md, ADR-FORMAT.md, project domain layout]
+    companion_files: [GLOSSARY-FORMAT.md, ADR-FORMAT.md]
     contract: Resolved terms and decisions → glossary or ADR in the project's existing locations.
     compatibility: Create artifacts as needed, within the approved documentation scope.
   pr:

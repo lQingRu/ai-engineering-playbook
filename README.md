@@ -1,53 +1,32 @@
 # AI Engineering Playbook
 
-A personal, stack-independent collaboration workflow for AI-assisted software development with Codex. Matt Pocock’s skills provide the engineering methods. This playbook adds personal working agreements and two entry points for using those methods across projects.
+A personal collaboration workflow for Codex. Matt Pocock’s skills provide the engineering methods. This playbook adds personal working agreements, reusable [standards](standards/README.md), [project templates](templates/README.md), and two explicit workflow entry points.
 
-## Layout
+## Install
 
-```text
-ai-engineering-playbook/
-├── README.md
-├── global/
-│   └── AGENTS.md
-├── standards/
-├── registry/
-│   └── skills.yaml
-├── skills/
-│   ├── pair-implement/
-│   │   └── SKILL.md
-│   └── bootstrap-project/
-│       └── SKILL.md
-├── templates/
-│   └── README.md
-└── scripts/
-    ├── install.sh
-    └── verify.sh
+Keep the checkout at a stable location. The scripts use a POSIX shell, Git, and Python 3.11+ with PyYAML. If needed, install PyYAML in a virtual environment of your choice and set `PYTHON` to its interpreter.
+
+```sh
+./scripts/install.sh --dry-run
+./scripts/install.sh
+./scripts/verify.sh
 ```
 
-The bootstrap skill and installation scripts are planned.
+Review the dry run before applying it. The installer merges one managed block into `${CODEX_HOME:-$HOME/.codex}/AGENTS.md`, backs up the previous file when it changes, and symlinks the two custom skills under `$HOME/.agents/skills`. The links keep each skill’s references and playbook resources accessible from the checkout. Existing Codex configuration, plugins, and other skills stay in place. Identical reruns are no-ops. Install Matt Pocock’s framework separately through its supported distribution after reviewing the revision and approving the change. [Codex instructions](https://learn.chatgpt.com/docs/agent-configuration/agents-md) · [Codex skill discovery](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills) · [Approved registry](registry/skills.yaml)
 
-## Standards and project documentation
+## Use in a project
 
-- [`standards/`](standards/README.md) defines reusable engineering policies and links to applicable external guidance. The [skill registry](registry/skills.yaml) records approved external skills and when they apply.
-- [`templates/`](templates/README.md) supplies prompts for decisions and documentation a project needs.
-- The application repository owns its approved conventions and the record of what it implements. Use its existing documentation and configuration as the source of truth for the project.
+- Start a fresh Codex session in the target repository. Use `/skills` or type `$` to find the two entry points.
+- Run `$bootstrap-project` to set up a new project or reconcile an existing one. Review its proposed paths, standards, dependencies, and quality gates before approving edits. Bootstrap selects guidance by the actual stack, task, and workflow. Approve third-party installs and tracker writes separately.
+- Run `$pair-implement <ticket>` for one ticket. Approve a named increment when the workflow ends its discovery turn. Review the resulting diff before separately approving a commit or PR publication. In a fresh session, confirm any pending action whose prior approval cannot be established.
 
-## Collaboration workflow
+## Verify and troubleshoot
 
-- **Set up or document a project** with Matt Pocock’s upstream setup and the applicable [project templates](templates/README.md). Record project decisions in existing repository guidance. Use the [standards index](standards/README.md) to find policies and specialist guidance by change type.
-- **Implement a task** with `pair-implement`. Start from the task’s existing issue, active spec, or request and use the relevant Matt Pocock skills. Record durable changes where the project already keeps them and follow the [specification lifecycle](standards/tickets.md#specification-lifecycle) for completed work.
-- **Carry personal preferences across repositories** through `global/AGENTS.md` and the user-level skills. Each project owns its standards. Codex loads both global and project guidance when starting a session. [Codex guidance discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md)
+- `./scripts/verify.sh --local-only` checks global guidance, custom skill links and invocation metadata, plus playbook resources. The default check also inspects the inventory of potentially required upstream skills. Repeat `--require ID` to check the dependencies selected for a project or task.
+- Add `--project /path/to/project` to inspect project instruction routing and name collisions. Add `--enforcement` to inspect local hook, rule, sandbox, and approval configuration.
+- Resolve reported overrides, duplicate skills, disabled entries, edited managed blocks, and broken paths before proceeding. Compare instruction prose for conflicts and use a fresh session to confirm enabled skills and effective guidance. A plugin cache gives static evidence about its contents. Confirm the active distribution in Codex.
+- Inspect `/hooks` for trust and verify required checks with the project’s CI or branch protection. The Markdown checkpoints guide the session. Tool, hook, and CI controls cover the operations they are configured to enforce. [Codex hook configuration](https://learn.chatgpt.com/docs/hooks)
 
-## Planned installation and verification
+## Maintain
 
-`scripts/install.sh` will install the global guidance at `${CODEX_HOME:-$HOME/.codex}/AGENTS.md` and the custom skill folders under `$HOME/.agents/skills`. An identical rerun will be a no-op. The installer will report conflicts and preserve existing files for explicit resolution. [Codex guidance discovery](https://learn.chatgpt.com/docs/agent-configuration/agents-md) · [Codex skill discovery](https://learn.chatgpt.com/docs/build-skills#where-codex-loads-local-skills)
-
-`scripts/verify.sh` will check the installed files and flag conditions that can affect discovery, such as a global `AGENTS.override.md`. Verification will also cover whether Codex discovers the guidance and the two custom skills in a fresh session.
-
-For manual pairing use, make the playbook root reachable by linking the skill folder to this checkout, setting `AI_ENGINEERING_PLAYBOOK_ROOT` to the checkout, or supplying its path at invocation. Use Matt Pocock’s upstream distribution for its skills.
-
-## Maintain the registry
-
-[registry/skills.yaml](registry/skills.yaml) is the inventory of approved external skills. Optional skills apply only to the recorded task and stack. Approval covers the stated use and leaves installation and updates to a separate, explicit decision.
-
-Review an entry when upgrading the relevant stack or skill, when a source is deprecated, or when a conflict surfaces. Compare upstream instructions and companion files, check version and artifact contracts, and look for new scripts, network calls, permissions, or writes. Verify a representative task before recording a tested revision and state what was tested. Replace or remove guidance whose scope or compatibility no longer fits. Keep framework details in upstream sources and project decisions in the application repository.
+Use the [maintenance guide](docs/maintenance.md) to review upstream changes, update the registry, revise personal preferences, reconcile adopted project versions, and roll back an installation. The [acceptance checks](tests/README.md) describe the disposable-home suite and how to exercise model behavior in an isolated session.

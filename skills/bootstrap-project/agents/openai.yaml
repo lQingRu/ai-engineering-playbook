@@ -1,0 +1,5 @@
+interface:
+  display_name: "Bootstrap Project"
+  short_description: "Reconcile project engineering setup"
+policy:
+  allow_implicit_invocation: false
