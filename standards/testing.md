@@ -5,6 +5,7 @@ Apply to new behaviour, behaviour changes, and regressions.
 ## Owned policy
 
 - Test observable behaviour through supported interfaces. Use deterministic setup and independent expected results.
+- Keep each test level in separate files. Use filenames that identify the level, for example `*.unit.test.ts` for TypeScript unit tests and `*.int.test.ts` for integration tests. Follow equivalent naming conventions for other languages and test frameworks.
 - Cover changed behaviour and meaningful failure cases. Add a regression test for a bug and show that it detects the original failure.
 - Use test-first for behavioural changes in pairing. If automation is impractical, use the [exception process](README.md) and provide alternate evidence.
 
